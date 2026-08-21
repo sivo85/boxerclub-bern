@@ -1,5 +1,5 @@
 /* Zentrale Website-Bausteine – Änderungen hier gelten auf allen eingebundenen Seiten. */
-const SITE={sponsors:[{name:'Allianz Suisse',type:'haupt',logo:'AZ_Logo_positive_RGB.png',url:'https://www.allianz.ch/'},{name:'Mathiblitz',type:'haupt',logo:'Mathi Blitz.png',url:'https://www.mathiblitz.ch/'}]};
+const SITE={sponsors:[{name:'Allianz Suisse',type:'haupt',logo:'AZ_Logo_positive_RGB.png',url:'https://www.maeder-allianz.ch/'},{name:'Mathiblitz',type:'haupt',logo:'Mathi Blitz.png',url:'https://www.mathiblitz.ch/'}]};
 function siteRoot(){const script=[...document.scripts].find(s=>s.src&&s.src.includes('components.js'));if(!script)return '';const url=new URL(script.src,window.location.href);return url.href.slice(0,url.href.lastIndexOf('/')+1)}
 function siteUrl(path=''){return siteRoot()+path}
 function mainSponsorStrip(){const main=SITE.sponsors.filter(s=>s.type==='haupt');if(!main.length)return '';return `<div class="top-sponsor-strip"><div class="site-wrap top-sponsor-inner"><span class="top-sponsor-label">Hauptsponsoren</span><div class="top-sponsor-logos">${main.map(s=>`<a href="${s.url}" target="_blank" rel="noopener" title="${s.name}"><img src="${siteUrl(s.logo)}" alt="${s.name}"></a>`).join('')}</div></div></div>`}
