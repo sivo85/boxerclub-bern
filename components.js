@@ -1,11 +1,8 @@
 /* Zentrale Website-Bausteine – Änderungen hier gelten auf allen eingebundenen Seiten. */
 const SITE={
   sponsors:[
-    /* Sponsoren werden nur hier gepflegt.
-       Typen: 'haupt', 'jubilaeum', 'partner'
-       Beispiel:
-       {name:'Firma Muster', type:'haupt', logo:'sponsors/muster.png', url:'https://example.ch'}
-    */
+    {name:'Allianz Suisse', type:'haupt', logo:'AZ_Logo_positive_RGB.png', url:'https://www.allianz.ch/'},
+    {name:'Mathiblitz', type:'haupt', logo:'Mathi Blitz.png', url:'https://www.mathiblitz.ch/'}
   ]
 };
 
@@ -26,5 +23,13 @@ function sponsorBlock(){
 }
 
 function siteFooter(){return `${sponsorBlock()}<footer class="site-footer"><div class="site-wrap site-footer-grid"><div><img class="site-footer-logo" src="logo-og-bern.png" alt="Boxer-Club Bern"></div><div><strong>Boxer-Club Bern</strong><br>Ortsgruppe des Schweizerischen Boxer-Clubs<br>Übungsplatz Struchismoos · Uettligen</div><div><a href="mitgliedschaft.html">Kontakt & Mitgliedschaft</a><br><a href="agenda.html">Agenda</a><br><span>© ${new Date().getFullYear()} Boxer-Club Bern</span></div></div></footer>`}
-function injectSite(){const h=document.querySelector('[data-site-header]'),f=document.querySelector('[data-site-footer]');if(h)h.innerHTML=siteHeader();if(f)f.innerHTML=siteFooter()}
+
+function injectSite(){
+  const h=document.querySelector('[data-site-header]');
+  const f=document.querySelector('[data-site-footer]');
+  if(h)h.innerHTML=siteHeader();
+  if(f){f.innerHTML=siteFooter();return;}
+  const existingFooter=document.querySelector('footer');
+  if(existingFooter && !document.querySelector('.site-sponsors')) existingFooter.insertAdjacentHTML('beforebegin',sponsorBlock());
+}
 document.addEventListener('DOMContentLoaded',injectSite);
