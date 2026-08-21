@@ -2,56 +2,13 @@
 const SITE={sponsors:[{name:'Allianz Suisse',type:'haupt',logo:'assets/logos/allianz.png',url:'https://www.maeder-allianz.ch/'},{name:'Mathiblitz',type:'haupt',logo:'assets/logos/mathiblitz.png',url:'https://www.mathiblitz.ch/'}]};
 function siteRoot(){const script=[...document.scripts].find(s=>s.src&&s.src.includes('components.js'));if(!script)return '';const url=new URL(script.src,window.location.href);return url.href.slice(0,url.href.lastIndexOf('/')+1)}
 function siteUrl(path=''){return siteRoot()+path}
-
-/* Kompatibilität für ältere Seiten: alle früheren Datei-Pfade werden zentral auf
-   die neue assets-Struktur umgeleitet. Dadurch bleiben Bilder und PDFs auch auf
-   bereits bestehenden Seiten funktionsfähig, ohne doppelte Dateien im Root. */
 const LEGACY_ASSETS={
-  'Boxerkopf-Bern.jpg.png':'assets/logos/boxerkopf-bern.png',
-  'AZ_Logo_positive_RGB.png':'assets/logos/allianz.png',
-  'Mathi Blitz.png':'assets/logos/mathiblitz.png',
-  'logo-og-bern.png':'assets/logos/logo-og-bern.png',
-  'SBC_1906.png':'assets/logos/sbc.png',
-  'Logo-SKG_1000x240px_Weiss (1).png':'assets/logos/skg.png',
-  'boxer-duo.jpg':'assets/images/boxer-duo.jpg',
-  'boxer-wald.jpg':'assets/images/boxer-wald.jpg',
-  'Caroline Baumann.jpg':'assets/images/vorstand/caroline-baumann.jpg',
-  'Fabienne Burgener.jpg':'assets/images/vorstand/fabienne-burgener.jpg',
-  'Martina Beyeler.jpeg':'assets/images/vorstand/martina-beyeler.jpeg',
-  'Martina Marti.jpg':'assets/images/vorstand/martina-marti.jpg',
-  'Michael Bracher.jpg':'assets/images/vorstand/michael-bracher.jpg',
-  'Nina Clavey.jpg':'assets/images/vorstand/nina-clavey.jpg',
-  'Sandra Gadient.jpg':'assets/images/vorstand/sandra-gadient.jpg',
-  'Simon Vonrüti.jpeg':'assets/images/vorstand/simon-vonrueti.jpeg',
-  'Simon Vonrüti.jpeg':'assets/images/vorstand/simon-vonrueti.jpeg',
-  'Ueli Burgener.jpg':'assets/images/vorstand/ueli-burgener.jpg',
-  'Beitrittsgesuch 2026 (1).pdf':'assets/documents/beitrittsgesuch-2026.pdf',
-  'SBC Mitgliederbeiträge ab 01.01.2025[38].pdf':'assets/documents/sbc-mitgliederbeitraege-2025.pdf',
-  'SBC Statuten 2020 (1).pdf':'assets/documents/sbc-statuten-2020.pdf'
+  'Boxerkopf-Bern.jpg.png':'assets/logos/boxerkopf-bern.png','AZ_Logo_positive_RGB.png':'assets/logos/allianz.png','Mathi Blitz.png':'assets/logos/mathiblitz.png','logo-og-bern.png':'assets/logos/logo-og-bern.png','SBC_1906.png':'assets/logos/sbc.png','Logo-SKG_1000x240px_Weiss (1).png':'assets/logos/skg.png','boxer-duo.jpg':'assets/images/boxer-duo.jpg','boxer-wald.jpg':'assets/images/boxer-wald.jpg','Caroline Baumann.jpg':'assets/images/vorstand/caroline-baumann.jpg','Fabienne Burgener.jpg':'assets/images/vorstand/fabienne-burgener.jpg','Martina Beyeler.jpeg':'assets/images/vorstand/martina-beyeler.jpeg','Martina Marti.jpg':'assets/images/vorstand/martina-marti.jpg','Michael Bracher.jpg':'assets/images/vorstand/michael-bracher.jpg','Nina Clavey.jpg':'assets/images/vorstand/nina-clavey.jpg','Sandra Gadient.jpg':'assets/images/vorstand/sandra-gadient.jpg','Simon Vonrüti.jpeg':'assets/images/vorstand/simon-vonrueti.jpeg','Simon Vonrüti.jpeg':'assets/images/vorstand/simon-vonrueti.jpeg','Ueli Burgener.jpg':'assets/images/vorstand/ueli-burgener.jpg','Beitrittsgesuch 2026 (1).pdf':'assets/documents/beitrittsgesuch-2026.pdf','SBC Mitgliederbeiträge ab 01.01.2025[38].pdf':'assets/documents/sbc-mitgliederbeitraege-2025.pdf','SBC Statuten 2020 (1).pdf':'assets/documents/sbc-statuten-2020.pdf'
 };
 function migrateLegacyAssets(){
-  const variants=[];
-  Object.entries(LEGACY_ASSETS).forEach(([oldPath,newPath])=>{
-    variants.push([oldPath,newPath],[encodeURI(oldPath),newPath]);
-  });
-  document.querySelectorAll('img[src],a[href],source[src]').forEach(el=>{
-    const attr=el.hasAttribute('href')?'href':'src';
-    let value=el.getAttribute(attr)||'';
-    if(!value||/^(https?:|mailto:|tel:|#)/i.test(value))return;
-    for(const [oldPath,newPath] of variants){
-      if(value===oldPath||value.endsWith('/'+oldPath)||decodeURI(value)===oldPath){el.setAttribute(attr,siteUrl(newPath));break}
-    }
-  });
-  document.querySelectorAll('style').forEach(style=>{
-    let css=style.textContent;
-    let changed=false;
-    for(const [oldPath,newPath] of Object.entries(LEGACY_ASSETS)){
-      if(css.includes(oldPath)){css=css.split(oldPath).join(siteUrl(newPath));changed=true}
-      const encoded=encodeURI(oldPath);
-      if(css.includes(encoded)){css=css.split(encoded).join(siteUrl(newPath));changed=true}
-    }
-    if(changed)style.textContent=css;
-  });
+  const variants=[];Object.entries(LEGACY_ASSETS).forEach(([oldPath,newPath])=>variants.push([oldPath,newPath],[encodeURI(oldPath),newPath]));
+  document.querySelectorAll('img[src],a[href],source[src]').forEach(el=>{const attr=el.hasAttribute('href')?'href':'src';const value=el.getAttribute(attr)||'';if(!value||/^(https?:|mailto:|tel:|#)/i.test(value))return;for(const [oldPath,newPath] of variants){const decoded=(()=>{try{return decodeURI(value)}catch{return value}})();if(value===oldPath||decoded===oldPath){el.setAttribute(attr,siteUrl(newPath));break}}});
+  document.querySelectorAll('style').forEach(style=>{let css=style.textContent;let changed=false;Object.entries(LEGACY_ASSETS).forEach(([oldPath,newPath])=>{const replacement=siteUrl(newPath);[`url('${oldPath}')`,`url(\"${oldPath}\")`,`url(${oldPath})`].forEach(pattern=>{if(css.includes(pattern)){css=css.split(pattern).join(`url('${replacement}')`);changed=true}})});if(changed)style.textContent=css});
 }
 function mainSponsorStrip(){const main=SITE.sponsors.filter(s=>s.type==='haupt');if(!main.length)return '';return `<div class="top-sponsor-strip"><div class="site-wrap top-sponsor-inner"><span class="top-sponsor-label">Hauptsponsoren</span><div class="top-sponsor-logos">${main.map(s=>`<a href="${s.url}" target="_blank" rel="noopener" title="${s.name}"><img src="${siteUrl(s.logo)}" alt="${s.name}"></a>`).join('')}</div></div></div>`}
 function siteHeader(){return `<header class="site-nav"><div class="site-navin"><a class="site-brand" href="${siteUrl('index.html')}"><img src="${siteUrl('assets/logos/boxerkopf-bern.png')}" alt="Schweizerischer Boxer-Club Ortsgruppe Bern 1926"></a><button class="site-menu-btn" aria-label="Menü öffnen" onclick="document.querySelector('.site-menu').classList.toggle('open')">☰</button><nav class="site-menu"><span class="site-dropdown"><button class="site-dropdown-btn" type="button">Club <span aria-hidden="true">▾</span></button><span class="site-dropdown-menu"><a href="${siteUrl('club.html')}">Unsere Ortsgruppe</a><a href="${siteUrl('sponsoren.html')}">Sponsoren & Partner</a></span></span><a href="${siteUrl('training.html')}">Training</a><a href="${siteUrl('agenda.html')}">Agenda</a><a href="${siteUrl('news.html')}">News</a><span class="site-dropdown"><button class="site-dropdown-btn" type="button">Geschichte <span aria-hidden="true">▾</span></button><span class="site-dropdown-menu"><a href="${siteUrl('100-jahre.html')}">100 Jahre OG Bern</a></span></span><a href="${siteUrl('mitgliedschaft.html')}">Mitgliedschaft</a><a href="${siteUrl('kontakt.html')}">Kontakt</a></nav></div></header>`}
