@@ -7,5 +7,23 @@ function siteHeader(){return `<header class="site-nav"><div class="site-navin"><
 function sponsorLogo(s){return `<a class="sponsor-logo" href="${s.url}" target="_blank" rel="noopener" title="${s.name}"><img src="${siteUrl(s.logo)}" alt="${s.name}"><span>${s.name}</span></a>`}
 function sponsorBlock(){const others=SITE.sponsors.filter(s=>s.type!=='haupt');if(!others.length)return '';const logos=others.map(s=>sponsorLogo(s)).join('');return `<section class="site-sponsors"><div class="sponsor-ticker-block"><div class="sponsor-label">Unsere Partner & Sponsoren</div><div class="sponsor-ticker"><div class="sponsor-track">${logos}${logos}</div></div></div></section>`}
 function siteFooter(){return `${sponsorBlock()}<footer class="site-footer"><div class="site-wrap"><div class="site-footer-grid"><div class="footer-identity"><img class="site-footer-logo" src="${siteUrl('Boxerkopf-Bern.jpg.png')}" alt="Boxer-Club Bern"><div><strong>Boxer-Club Bern</strong><br><span>Ortsgruppe des Schweizerischen Boxer-Clubs</span><br><span>Übungsplatz Struchismoos · Uettligen</span><br><a class="footer-mail" href="mailto:info@boxerclub-bern.ch">info@boxerclub-bern.ch</a></div></div><div><div class="footer-title">Schnellzugriff</div><div class="footer-links"><a href="${siteUrl('club.html')}">Club</a><a href="${siteUrl('training.html')}">Training</a><a href="${siteUrl('agenda.html')}">Agenda</a><a href="${siteUrl('news.html')}">News</a><a href="${siteUrl('sponsoren.html')}">Sponsoren & Partner</a><a href="${siteUrl('mitgliedschaft.html')}">Mitgliedschaft</a><a href="${siteUrl('kontakt.html')}">Kontakt</a></div></div><div><div class="footer-title">Organisationen</div><div class="footer-org-logos"><a href="https://www.boxerhunde.ch/" target="_blank" rel="noopener" title="Schweizerischer Boxer-Club SBC"><img src="${siteUrl('SBC_1906.png')}" alt="Schweizerischer Boxer-Club SBC"></a><a href="https://www.skg.ch/" target="_blank" rel="noopener" title="Schweizerische Kynologische Gesellschaft SKG"><img src="${siteUrl('Logo-SKG_1000x240px_Weiss (1).png')}" alt="Schweizerische Kynologische Gesellschaft SKG"></a></div><p class="footer-org"><a href="https://www.boxerhunde.ch/" target="_blank" rel="noopener">Schweizerischer Boxer-Club SBC</a><br><a href="https://www.skg.ch/" target="_blank" rel="noopener">Schweizerische Kynologische Gesellschaft SKG</a></p></div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} Boxer-Club Bern</span><div><a href="${siteUrl('impressum.html')}">Impressum</a><a href="${siteUrl('datenschutz.html')}">Datenschutz</a><a href="https://www.facebook.com/boxerclubbern" target="_blank" rel="noopener">Facebook</a></div></div></div></footer>`}
-function injectSite(){if(!document.querySelector('.top-sponsor-strip'))document.body.insertAdjacentHTML('afterbegin',mainSponsorStrip());const h=document.querySelector('[data-site-header]');const f=document.querySelector('[data-site-footer]');if(h)h.innerHTML=siteHeader();if(f){f.innerHTML=siteFooter();return}const existingFooter=document.querySelector('footer');const block=sponsorBlock();if(existingFooter&&block&&!document.querySelector('.site-sponsors'))existingFooter.insertAdjacentHTML('beforebegin',block)}
+function injectSite(){
+  if(!document.querySelector('.top-sponsor-strip'))document.body.insertAdjacentHTML('afterbegin',mainSponsorStrip());
+
+  const headerSlot=document.querySelector('[data-site-header]');
+  if(headerSlot){
+    headerSlot.innerHTML=siteHeader();
+  }else{
+    const legacyHeader=document.querySelector('header.nav');
+    if(legacyHeader)legacyHeader.outerHTML=siteHeader();
+  }
+
+  const footerSlot=document.querySelector('[data-site-footer]');
+  if(footerSlot){
+    footerSlot.innerHTML=siteFooter();
+  }else{
+    const legacyFooter=document.querySelector('footer');
+    if(legacyFooter)legacyFooter.outerHTML=siteFooter();
+  }
+}
 document.addEventListener('DOMContentLoaded',injectSite);
