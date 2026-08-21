@@ -5,49 +5,12 @@ const SITE={
     {name:'Mathiblitz', type:'haupt', logo:'Mathi Blitz.png', url:'https://www.mathiblitz.ch/'}
   ]
 };
-
-/* Ermittelt den Weg zurück zum Website-Stamm. So funktionieren Header, Footer,
-   Logos und Sponsoren auch auf Unterseiten wie /news/herbstpruefung-2025.html. */
-function siteRoot(){
-  const script=[...document.scripts].find(s=>s.src && s.src.includes('components.js'));
-  if(!script)return '';
-  const url=new URL(script.src,window.location.href);
-  return url.href.slice(0,url.href.lastIndexOf('/')+1);
-}
+function siteRoot(){const script=[...document.scripts].find(s=>s.src&&s.src.includes('components.js'));if(!script)return '';const url=new URL(script.src,window.location.href);return url.href.slice(0,url.href.lastIndexOf('/')+1)}
 function siteUrl(path=''){return siteRoot()+path}
-
-function mainSponsorStrip(){
-  const main=SITE.sponsors.filter(s=>s.type==='haupt');
-  if(!main.length)return '';
-  return `<div class="top-sponsor-strip"><div class="site-wrap top-sponsor-inner"><span class="top-sponsor-label">Hauptsponsoren</span><div class="top-sponsor-logos">${main.map(s=>`<a href="${s.url}" target="_blank" rel="noopener" title="${s.name}"><img src="${siteUrl(s.logo)}" alt="${s.name}"></a>`).join('')}</div></div></div>`
-}
-
-function siteHeader(){return `<header class="site-nav"><div class="site-navin"><a class="site-brand" href="${siteUrl('index.html')}"><img src="${siteUrl('Boxerkopf-Bern.jpg.png')}" alt="Schweizerischer Boxer-Club Ortsgruppe Bern 1926"></a><button class="site-menu-btn" aria-label="Menü öffnen" onclick="document.querySelector('.site-menu').classList.toggle('open')">☰</button><nav class="site-menu"><a href="${siteUrl('club.html')}">Club</a><a href="${siteUrl('training.html')}">Training</a><a href="${siteUrl('agenda.html')}">Agenda</a><a href="${siteUrl('news.html')}">News</a><span class="site-dropdown"><button class="site-dropdown-btn" type="button" aria-label="Geschichte öffnen">Geschichte <span aria-hidden="true">▾</span></button><span class="site-dropdown-menu"><a href="${siteUrl('100-jahre.html')}">100 Jahre OG Bern</a></span></span><a href="${siteUrl('mitgliedschaft.html')}">Mitgliedschaft</a><a href="${siteUrl('kontakt.html')}">Kontakt</a></nav></div></header>`}
-
+function mainSponsorStrip(){const main=SITE.sponsors.filter(s=>s.type==='haupt');if(!main.length)return '';return `<div class="top-sponsor-strip"><div class="site-wrap top-sponsor-inner"><span class="top-sponsor-label">Hauptsponsoren</span><div class="top-sponsor-logos">${main.map(s=>`<a href="${s.url}" target="_blank" rel="noopener" title="${s.name}"><img src="${siteUrl(s.logo)}" alt="${s.name}"></a>`).join('')}</div></div></div>`}
+function siteHeader(){return `<header class="site-nav"><div class="site-navin"><a class="site-brand" href="${siteUrl('index.html')}"><img src="${siteUrl('Boxerkopf-Bern.jpg.png')}" alt="Schweizerischer Boxer-Club Ortsgruppe Bern 1926"></a><button class="site-menu-btn" aria-label="Menü öffnen" onclick="document.querySelector('.site-menu').classList.toggle('open')">☰</button><nav class="site-menu"><a href="${siteUrl('club.html')}">Club</a><a href="${siteUrl('training.html')}">Training</a><a href="${siteUrl('agenda.html')}">Agenda</a><a href="${siteUrl('news.html')}">News</a><span class="site-dropdown"><button class="site-dropdown-btn" type="button">Geschichte <span aria-hidden="true">▾</span></button><span class="site-dropdown-menu"><a href="${siteUrl('100-jahre.html')}">100 Jahre OG Bern</a></span></span><a href="${siteUrl('mitgliedschaft.html')}">Mitgliedschaft</a><a href="${siteUrl('kontakt.html')}">Kontakt</a></nav></div></header>`}
 function sponsorLogo(s){return `<a class="sponsor-logo" href="${s.url}" target="_blank" rel="noopener" title="${s.name}"><img src="${siteUrl(s.logo)}" alt="${s.name}"><span>${s.name}</span></a>`}
-
-/* Im unteren Sponsorenbereich erscheinen nur Partner/Jubiläumspartner – Hauptsponsoren sind exklusiv im Header. */
-function sponsorBlock(){
-  const jub=SITE.sponsors.filter(s=>s.type==='jubilaeum');
-  const others=SITE.sponsors.filter(s=>s.type!=='haupt');
-  if(!others.length)return '';
-  let html=`<section class="site-sponsors">`;
-  if(jub.length)html+=`<div class="site-wrap sponsor-jub"><div class="sponsor-label">Jubiläumspartner · 100 Jahre OG Bern</div></div>`;
-  const logos=others.map(s=>sponsorLogo(s)).join('');
-  html+=`<div class="sponsor-ticker-block"><div class="sponsor-label">Unsere Partner & Sponsoren</div><div class="sponsor-ticker" aria-label="Partner und Sponsoren"><div class="sponsor-track">${logos}${logos}</div></div></div></section>`;
-  return html;
-}
-
-function siteFooter(){return `${sponsorBlock()}<footer class="site-footer"><div class="site-wrap site-footer-grid"><div><img class="site-footer-logo" src="${siteUrl('logo-og-bern.png')}" alt="Boxer-Club Bern"></div><div><strong>Boxer-Club Bern</strong><br>Ortsgruppe des Schweizerischen Boxer-Clubs<br>Übungsplatz Struchismoos · Uettligen</div><div><a href="${siteUrl('kontakt.html')}">Kontakt</a><br><a href="${siteUrl('mitgliedschaft.html')}">Mitgliedschaft</a><br><a href="${siteUrl('agenda.html')}">Agenda</a><br><span>© ${new Date().getFullYear()} Boxer-Club Bern</span></div></div></footer>`}
-
-function injectSite(){
-  if(!document.querySelector('.top-sponsor-strip')) document.body.insertAdjacentHTML('afterbegin',mainSponsorStrip());
-  const h=document.querySelector('[data-site-header]');
-  const f=document.querySelector('[data-site-footer]');
-  if(h)h.innerHTML=siteHeader();
-  if(f){f.innerHTML=siteFooter();return;}
-  const existingFooter=document.querySelector('footer');
-  const block=sponsorBlock();
-  if(existingFooter && block && !document.querySelector('.site-sponsors')) existingFooter.insertAdjacentHTML('beforebegin',block);
-}
+function sponsorBlock(){const others=SITE.sponsors.filter(s=>s.type!=='haupt');if(!others.length)return '';const logos=others.map(s=>sponsorLogo(s)).join('');return `<section class="site-sponsors"><div class="sponsor-ticker-block"><div class="sponsor-label">Unsere Partner & Sponsoren</div><div class="sponsor-ticker"><div class="sponsor-track">${logos}${logos}</div></div></div></section>`}
+function siteFooter(){return `${sponsorBlock()}<footer class="site-footer"><div class="site-wrap"><div class="site-footer-grid"><div class="footer-identity"><img class="site-footer-logo" src="${siteUrl('Boxerkopf-Bern.jpg.png')}" alt="Boxer-Club Bern"><div><strong>Boxer-Club Bern</strong><br><span>Ortsgruppe des Schweizerischen Boxer-Clubs</span><br><span>Übungsplatz Struchismoos · Uettligen</span><br><a class="footer-mail" href="mailto:info@boxerclub-bern.ch">info@boxerclub-bern.ch</a></div></div><div><div class="footer-title">Schnellzugriff</div><div class="footer-links"><a href="${siteUrl('club.html')}">Club</a><a href="${siteUrl('training.html')}">Training</a><a href="${siteUrl('agenda.html')}">Agenda</a><a href="${siteUrl('news.html')}">News</a><a href="${siteUrl('mitgliedschaft.html')}">Mitgliedschaft</a><a href="${siteUrl('kontakt.html')}">Kontakt</a></div></div><div><div class="footer-title">Organisationen</div><p class="footer-org">Schweizerischer Boxer-Club SBC<br>Schweizerische Kynologische Gesellschaft SKG</p></div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} Boxer-Club Bern</span><div><a href="${siteUrl('impressum.html')}">Impressum</a><a href="${siteUrl('datenschutz.html')}">Datenschutz</a><a href="https://www.facebook.com/boxerclubbern" target="_blank" rel="noopener">Facebook</a></div></div></div></footer>`}
+function injectSite(){if(!document.querySelector('.top-sponsor-strip'))document.body.insertAdjacentHTML('afterbegin',mainSponsorStrip());const h=document.querySelector('[data-site-header]');const f=document.querySelector('[data-site-footer]');if(h)h.innerHTML=siteHeader();if(f){f.innerHTML=siteFooter();return}const existingFooter=document.querySelector('footer');const block=sponsorBlock();if(existingFooter&&block&&!document.querySelector('.site-sponsors'))existingFooter.insertAdjacentHTML('beforebegin',block)}
 document.addEventListener('DOMContentLoaded',injectSite);
