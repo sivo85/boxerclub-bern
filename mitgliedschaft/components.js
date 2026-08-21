@@ -1,1 +1,1 @@
-(()=>{const me=document.currentScript;const src=new URL('../components.js',me.src).href;me.remove();const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)})();
+(()=>{const me=document.currentScript;const src=new URL('../components.js',me.src).href;me.remove();const s=document.createElement('script');s.src=src;s.onload=()=>{if(document.readyState!=='loading'&&typeof injectSite==='function'&&!document.querySelector('.site-nav'))injectSite()};document.head.appendChild(s)})();
