@@ -6,6 +6,12 @@ const SITE={
   ]
 };
 
+function mainSponsorStrip(){
+  const main=SITE.sponsors.filter(s=>s.type==='haupt');
+  if(!main.length)return '';
+  return `<div class="top-sponsor-strip"><div class="site-wrap top-sponsor-inner"><span class="top-sponsor-label">Hauptsponsoren</span><div class="top-sponsor-logos">${main.map(s=>`<a href="${s.url}" target="_blank" rel="noopener" title="${s.name}"><img src="${s.logo}" alt="${s.name}"></a>`).join('')}</div></div></div>`
+}
+
 function siteHeader(){return `<header class="site-nav"><div class="site-navin"><a class="site-brand" href="index.html"><img src="logo-og-bern.png" alt="Boxer-Club Bern"></a><button class="site-menu-btn" aria-label="Menü öffnen" onclick="document.querySelector('.site-menu').classList.toggle('open')">☰</button><nav class="site-menu"><a href="club.html">Club</a><a href="training.html">Training</a><a href="agenda.html">Agenda</a><a href="100-jahre.html">100 Jahre</a><a href="mitgliedschaft.html">Mitglied werden</a></nav></div></header>`}
 
 function sponsorLogo(s,large=false){return `<a class="sponsor-logo${large?' sponsor-logo-main':''}" href="${s.url}" target="_blank" rel="noopener" title="${s.name}"><img src="${s.logo}" alt="${s.name}"><span>${s.name}</span></a>`}
@@ -25,6 +31,7 @@ function sponsorBlock(){
 function siteFooter(){return `${sponsorBlock()}<footer class="site-footer"><div class="site-wrap site-footer-grid"><div><img class="site-footer-logo" src="logo-og-bern.png" alt="Boxer-Club Bern"></div><div><strong>Boxer-Club Bern</strong><br>Ortsgruppe des Schweizerischen Boxer-Clubs<br>Übungsplatz Struchismoos · Uettligen</div><div><a href="mitgliedschaft.html">Kontakt & Mitgliedschaft</a><br><a href="agenda.html">Agenda</a><br><span>© ${new Date().getFullYear()} Boxer-Club Bern</span></div></div></footer>`}
 
 function injectSite(){
+  if(!document.querySelector('.top-sponsor-strip')) document.body.insertAdjacentHTML('afterbegin',mainSponsorStrip());
   const h=document.querySelector('[data-site-header]');
   const f=document.querySelector('[data-site-footer]');
   if(h)h.innerHTML=siteHeader();
