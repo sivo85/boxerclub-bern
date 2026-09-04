@@ -1,0 +1,15 @@
+{
+  "events": [
+    {"date":"2026-08-22","time":"10:00–12:00","title":"Übung","description":"Training auf dem Übungsplatz im Struchismoos, Uettligen.","type":"training"},
+    {"date":"2026-08-29","time":"10:00–12:00","title":"Übung","description":"Gemeinsames Training im Struchismoos.","type":"training"},
+    {"date":"2026-09-05","time":"14:00–16:00","title":"Übung","description":"Training gemäss Jahresprogramm.","type":"training"},
+    {"date":"2026-09-19","time":"14:00–16:00","title":"Übung","description":"Training auf unserem Clubgelände.","type":"training"},
+    {"date":"2026-09-26","time":"14:00–16:00","title":"Übung","description":"Training im Struchismoos.","type":"training"},
+    {"date":"2026-10-03","time":"14:00–16:00","title":"Übung","description":"Training gemäss Jahresprogramm.","type":"training"},
+    {"date":"2026-10-10","time":"ganztägig","title":"Herbstprüfung","description":"Prüfungstag der OG Bern im Struchismoos.","type":"prüfung"},
+    {"date":"2026-10-17","time":"14:00–16:00","title":"Übung","description":"Ordentliches Training im Struchismoos.","type":"training"},
+    {"date":"2026-10-24","time":"14:00–16:00","title":"Übung","description":"Ordentliches Training im Struchismoos.","type":"training"},
+    {"date":"2026-10-31","time":"17:00–22:00","title":"Halloween Special Event","description":"Gemeinsamer Clubanlass im Struchismoos.","type":"club"},
+    {"date":"2026-11-07","time":"ab 17:30 Uhr","title":"100 Jahre OG Bern – Jubiläumsfest","description":"Gemeinsamer Festabend zum 100-jährigen Bestehen der Ortsgruppe Bern.","type":"jubiläum"}
+  ]
+}
